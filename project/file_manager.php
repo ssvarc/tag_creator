@@ -6,13 +6,15 @@
 
 <?php
 
-include 'error_handler.php';
+function __autoload($class_name) {
+	include $class_name . '.php';
+}
 
 interface IFileManager{
 	function createFile($path, $file);
 	function readFile($path, $file);
 	function updateFile($path, $file, $content, $mode);
-	function deleteFile();
+	function deleteFile($path, $file);
 	function file_modification_time($path, $file);
 }
 
@@ -24,9 +26,9 @@ class FileManager implements IFileManager{
 			if (file_exists($path . $file)){    									
 				throw new FileExistsException();     			//throws exception if file already exists
 			}
-			fopen($handle = $path . $file, 'w+');    			 		
-            		fclose($handle);     						//closes newly created file
-       	        }
+			$handle = fopen($path . $file, 'w+');    			 		
+            fclose($handle);     						//closes newly created file
+       	}
 		catch(FileExistsException $fee){
 			new ErrorHandler('c:\xampp\htdocs\project\\', 'file_error_log.csv', $fee);		//displays error message and writes error to log
 		}
@@ -72,7 +74,7 @@ class FileManager implements IFileManager{
 			if (!is_writable($path . $file)){     												
 				throw new FileNotWritableException();     		//throws exception if file is not writable
 			}
-			fopen($handle = $path . $file, $mode);     			//opens file in appropriate mode
+			$handle = fopen($path . $file, $mode);     			//opens file in appropriate mode
 			fwrite($handle, $content);     					//writes to file (append or write)
 			fclose($handle);     						//closes file
 		}
@@ -90,8 +92,9 @@ class FileManager implements IFileManager{
 		}
 	}
 
-	public function deleteFile(){
+	public function deleteFile($path, $file){
 		try{
+			$this->validate_path_file($path, $file, null);
 			if (!file_exists($path . $file)){     												
 				throw new FileNotFoundException();     						//throws exception if files does not exist
 			}
@@ -100,15 +103,18 @@ class FileManager implements IFileManager{
 		catch(FileNotFoundException $fnfe){
 			new ErrorHandler('c:\xampp\htdocs\project\\', 'file_error_log.csv', $fnfe);		//displays error message and writes error to log
 		}
+		catch(InvalidFileParameterException $ifpe){
+			new ErrorHandler('c:\xampp\htdocs\project\\', 'file_error_log.csv', $ifpe);		//displays error message and writes error to log
+		}
 	}
 	
 	public function file_modification_time($path, $file){
 		try{
 			$this->validate_path_file($path, $file, null);
-			if(!file_exists($filename)){
+			if(!file_exists($path . $file)){
 				throw new FileNotFoundException ();
 			}
-			echo "$filename was last modified: " . date ("F d Y H:i:s.", filemtime($filename));
+			echo "$filename was last modified: " . date ("F d Y H:i:s.", filemtime($path . $file));
 		}
 		catch(FileNotFoundException $fnfe){
 			new ErrorHandler('c:\xampp\htdocs\project\\', 'file_error_log.csv', $fnfe);		//displays error message and writes error to log
