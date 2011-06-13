@@ -27,21 +27,29 @@ class TagGenerator {
 		try{
 			//test for exceptions
 			$this->exception_tester($tag, $attributes, $content);
+			
 			//if no exception has been thrown then generate an html tag
 			$html = '<' . $tag;
-			foreach($attributes as $key=>$value){
-				if(isset($value)){
-					$html .= ' ' . $key . '="' . $value . '"';		
-				}
-	     		}
-	     		//opening tag gets closed. content/close tag is only added if tag isn't a void tag.
+			
+			//will only allow the insertion of attributes if the tag allows it.
+			if ($this->tagHasAttributes($tag)){
+				foreach($attributes as $key=>$value){
+					if(isset($value)){
+						$html .= ' ' . $key . '="' . $value . '"';		
+					}
+		     		}
+			}
+			
+		     	//opening tag gets closed. 
 			$html .= '>';
 				
+			//content/close tag is only added if tag isn't a void tag.
 			if($this->isCloseTagNeeded($tag)){
 				$html .= $content . "</" . $tag . "><br>\n";
 			}
+			
 			//return string containing the complete html tag 	
-		    	return $html;
+		        return $html;
 		}
 		catch (InvalidTagException $ite){
 			new ErrorHandler('c:\xampp\htdocs\project\\', 'tag_error_log.csv', $ite);
@@ -56,7 +64,7 @@ class TagGenerator {
 	
 	private function exception_tester($tag, $attributes, $content){
 		//test validity of the html tag
-		if(!$this->html5TagValidate($tag)){
+		if(!$this->isHtml5TagValid($tag)){
 	            throw new InvalidTagException();
 	        }	
 	        //test if attributes are in an array	
@@ -72,7 +80,7 @@ class TagGenerator {
 	/*
 	*This function will check if the given tag is a valid tag in HTML5.
 	*/
-	private function html5TagValidate($tag){
+	private function isHtml5TagValid($tag){
 	
 		    $html5ValidTags = array ("!--", "!DOCTYPE", "a", "abbr", "address", "area", "article", "aside", "audio", "b", "base", "bdo",
 		    "blockquote", "body", "br", "button", "canvas", "caption", "cite", "code", "col", "colgroup", "command", "datalist", "dd",
@@ -101,6 +109,18 @@ class TagGenerator {
 			return true;
 		}
 	}
+	
+	private function tagHasAttributes($tag){
+		//array of all HTML5 tags which do not allow for attributes.
+		$tagsWithoutAttributes = array ("br","hr");
+		
+		if (in_array($tag, $tagsWithoutAttributes)){
+			return false;
+		}else{
+			return true;
+		}
+	}
+	
 }
 
 class InvalidTagException extends Exception{ 
@@ -121,7 +141,7 @@ class NonStringException extends Exception{
 	public function _construct($message, $code){ }
 }
 
-$tag = "img";
+$tag = "a";
 $attributes = array("id" => "myid", "href" => "http://www.ruxtongroup.com", "class" => "myfirstclass mysecondclass");
 $content = "Test tag";
 new TagGenerator($tag, $attributes, $content);

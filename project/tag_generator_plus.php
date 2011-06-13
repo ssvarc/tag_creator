@@ -46,7 +46,7 @@ class TagGenerator {
 				$html .= $content . "</" . $tag . "><br>\n";
 			}
 			//return string containing the complete html tag 	
-		    	return $html;
+		    return $html;
 		}
 		catch (InvalidTagException $ite){
 			new ErrorHandler('c:\xampp\htdocs\project\\', 'tag_error_log.csv', $ite);
@@ -116,9 +116,6 @@ class TagGenerator {
 		}else{
 			return true;
 		}
-		
-		
-		
 	}
 }
 
