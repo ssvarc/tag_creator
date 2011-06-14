@@ -126,19 +126,16 @@ class TagGenerator {
 class InvalidTagException extends Exception{ 
 	public $message = 'Invalid HTML5 tag';
 	public $code = 111;
-	public function _construct($message, $code){ }
 }
 
 class NonArrayException extends Exception{ 
 	public $message = 'Attributes must be in an array';
 	public $code = 112;
-	public function _construct($message, $code){ }
 }
 
 class NonStringException extends Exception{
 	public $message = 'Content must be a string';
 	public $code = 113;
-	public function _construct($message, $code){ }
 }
 
 $tag = "a";

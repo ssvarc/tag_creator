@@ -140,36 +140,30 @@ class FileManager implements IFileManager{
 class FileExistsException extends Exception{
 	public $message = 'File already exists!';
 	public $code = 102;
-	public function _construct($message, $code){ }
 }
 
 class FileNotFoundException extends Exception{ 
 	public $message = 'File does not exist';
 	public $code = 100;
-	public function _construct($message, $code){ }
 }
 
 class FileNotReadableException extends Exception{ 
 	public $message = 'File is not readable!';
 	public $code = 104;
-	public function _construct($message, $code){ }
 }
 
 class FileNotWritableException extends Exception{ 
 	public $message = 'File is not writable!';
 	public $code = 103;
-	public function _construct($message, $code){ }
 }
 
 class InvalidWriteModeException extends Exception{
 	public $message = 'Invalid write mode selection!';
 	public $code = 114;
-	public function _construct($message, $code){ }
 }
 
 class InvalidFileParameterException extends Exception{
 	public $message = 'Any path, file, or content must be strings!';
 	public $code = 105;
-	public function _construct($message, $code){ }
 }
 ?>
