@@ -1,6 +1,6 @@
 /*
 *Author: Eli Goldner
-*Description: this function will only accept a tag that is valid in HTML5
+*Description: this function will return true if the tag provided is a valid tag in HTML5
 */
 
 <?php
